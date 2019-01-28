@@ -4,6 +4,14 @@ body {
   box-sizing: border-box;
 }
 
-#game-canvas {
+.game-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-container #game-canvas {
   background-color: #000;
 }
