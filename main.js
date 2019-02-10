@@ -4,13 +4,14 @@ const ctx = canvas.getContext('2d');
 
 // set canvas width and height
 canvas.width = 600;
-canvas.height = 600;
+canvas.height = 500;
 
-// define player
+// Code for Player(s)
 class Player {
-  constructor(x, y, color) {
+  constructor(x, color) {
     this.x = x;
-    this.y = y;
+    this.y = 0;
+    this.height = 80;
     this.color = color;
   }
 
@@ -20,57 +21,76 @@ class Player {
 
   draw() {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, 10, 80);
+    ctx.fillRect(this.x, this.y, 10, this.height);
   }
 
-  moveDown() {
-    this.y += 10;
-  }
-
-  moveUp() {
-    this.y -= 10;
+  move(e) {
+    this.y = e.clientY - this.height * 2;
+    if(this.y > canvas.height - this.height) {
+      this.y = canvas.height - this.height;
+    } else if(this.y < 0) {
+      this.y = 0;
+    }
   }
 }
 
 // player 1
-const player1 = new Player(50, 300, '#f00');
+const player1 = new Player(50, '#f00');
 // player 2
-const player2 = new Player(550, 300, '#0f0');
+const player2 = new Player(550, '#0f0');
 
-window.addEventListener('keydown', e => movePlayer(e));
+window.addEventListener('mousemove', e => movePlayers(e));
 
-function movePlayer(e) {
-  const { key } = e;
-  // move player 1 or move player 2
-  if(key === 'w' || key === 's') {
-    switch(key) {
-      case 'w':
-        player1.moveUp();
-        break;
-      case 's':
-        player1.moveDown();
-        break;
-      default:
-        break;
-    }
-  } else if(key === 'ArrowUp' || key === 'ArrowDown') {
-    switch(key) {
-      case 'ArrowUp':
-        player2.moveUp();
-        break;
-      case 'ArrowDown':
-        player2.moveDown();
-        break;
-      default:
-        break;
+function movePlayers(e) {
+  player1.move(e);
+  player2.move(e);
+}
+
+// Code for circle
+class Circle {
+  constructor() {
+    this.radius = 5;
+    this.x = canvas.width / 2 - this.radius;
+    this.y = canvas.height / 2 - this.radius;
+    this.dx = 2;
+    this.dy = 2;
+  }
+
+  start() {
+    this.draw();
+    this.move();
+    this.collideWall()
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = "#416dea";
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  move() {
+    this.x += this.dx;
+    this.y += this.dy;
+  }
+
+  collideWall() {
+    if(this.x < 0 + this.radius || this.x > canvas.width - this.radius) {
+      this.dx = -this.dx;
+    } else if(this.y < 0 + this.radius || this.y > canvas.height - this.radius) {
+      this.dy = -this.dy;
     }
   }
 }
+
+const circle = new Circle();
 
 function play() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player1.start();
   player2.start();
+  circle.start();
   window.requestAnimationFrame(play);
 }
 
