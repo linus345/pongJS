@@ -11,6 +11,7 @@ class Player {
   constructor(x, color) {
     this.x = x;
     this.y = 0;
+    this.width = 10;
     this.height = 80;
     this.color = color;
   }
@@ -21,7 +22,7 @@ class Player {
 
   draw() {
     ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, 10, this.height);
+    ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 
   move(e) {
@@ -49,7 +50,7 @@ function movePlayers(e) {
 // Code for circle
 class Circle {
   constructor() {
-    this.radius = 5;
+    this.radius = 6;
     this.x = canvas.width / 2 - this.radius;
     this.y = canvas.height / 2 - this.radius;
     this.dx = 2;
@@ -59,7 +60,8 @@ class Circle {
   start() {
     this.draw();
     this.move();
-    this.collideWall()
+    this.collideWall();
+    this.collidePlayer();
   }
 
   draw() {
@@ -80,6 +82,15 @@ class Circle {
       this.dx = -this.dx;
     } else if(this.y < 0 + this.radius || this.y > canvas.height - this.radius) {
       this.dy = -this.dy;
+    }
+  }
+
+  collidePlayer() {
+    // check if crash with player 1(if) and player 2(else if)
+    if(this.x + this.dx === player1.x + player1.width && this.y + this.dy > player1.y && this.y + this.dy < player1.y + player1.height) {
+      alert('crashed');
+    } else if(this.x + this.dx === player2.x && this.y + this.dy > player2.y && this.y + this.dy < player2.y + player2.height) {
+      alert('crashed');
     }
   }
 }
