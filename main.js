@@ -78,8 +78,8 @@ class Circle {
   }
 
   collideWall() {
-    if(this.x < 0 + this.radius || this.x > canvas.width - this.radius) {
-      this.dx = -this.dx;
+    if(this.x - this.dx < 0 + this.radius || this.x - this.dx > canvas.width - this.radius) {
+      alert('game over');
     } else if(this.y < 0 + this.radius || this.y > canvas.height - this.radius) {
       this.dy = -this.dy;
     }
@@ -88,9 +88,9 @@ class Circle {
   collidePlayer() {
     // check if crash with player 1(if) and player 2(else if)
     if(this.x + this.dx === player1.x + player1.width && this.y + this.dy > player1.y && this.y + this.dy < player1.y + player1.height) {
-      alert('crashed');
+      this.dx = -this.dx;
     } else if(this.x + this.dx === player2.x && this.y + this.dy > player2.y && this.y + this.dy < player2.y + player2.height) {
-      alert('crashed');
+      this.dx = -this.dx;
     }
   }
 }
